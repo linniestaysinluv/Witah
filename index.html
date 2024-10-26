@@ -15,6 +15,7 @@
             font-family: Arial, sans-serif;
             background-color: #f0f8ff;
             overflow: hidden;
+            position: relative;
         }
         h1 {
             color: #ef5858;
@@ -50,30 +51,28 @@
             color: white;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
+        #questionButton {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            font-size: 1em;
+            background-color: #c6a2ff;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            color: white;
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0); }
-        }
-        .emoji {
-            font-size: 1.5em;
-            color: #ef5858;
-            opacity: 0;
-            animation: fadeIn 2s forwards, float 3s ease-in-out infinite;
-        }
-        .heart {
+        .draggable-heart {
             position: absolute;
+            font-size: 2em;
             color: #ff69b4;
-            font-size: 1.5em;
-            animation: fall 3s linear infinite;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-100px) rotate(0); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+            cursor: grab;
+            display: none;
         }
     </style>
 </head>
@@ -82,6 +81,7 @@
     <button onclick="addMessage()">More love! ʕ•́ᴥ•̀ʔっ♡</button>
     <button id="coolButton" onclick="coolMessage()">Wanna know something..? (๑•̀ㅂ•́)و✧</button>
     <button id="rainButton" onclick="startHeartRain()">❤️</button>
+    <button id="questionButton" onclick="showDraggableHeart()">❓</button>
     <div id="messages"></div>
 
     <script>
@@ -105,12 +105,6 @@
                 topMessage.innerHTML = 'I miss you. (｡•́︿•̀｡)';
                 document.body.insertBefore(topMessage, messageDiv);
                 coolButton.style.display = "none";  // Hides the button after the final click
-
-                // Adds a floating emoji
-                const emoji = document.createElement('div');
-                emoji.className = 'emoji';
-                emoji.innerHTML = '✧(｡•̀ᴗ-)✧';
-                document.body.appendChild(emoji);
             }
         }
 
@@ -128,6 +122,42 @@
                     heart.remove();
                 });
             }
+        }
+
+        function showDraggableHeart() {
+            let draggableHeart = document.getElementById('draggableHeart');
+            if (!draggableHeart) {
+                draggableHeart = document.createElement('div');
+                draggableHeart.id = 'draggableHeart';
+                draggableHeart.className = 'draggable-heart';
+                draggableHeart.textContent = '❤️';
+                draggableHeart.style.left = '50vw';
+                draggableHeart.style.top = '50vh';
+                document.body.appendChild(draggableHeart);
+
+                draggableHeart.addEventListener('mousedown', startDrag);
+            }
+            draggableHeart.style.display = 'block';
+        }
+
+        function startDrag(event) {
+            const heart = event.target;
+            heart.style.position = 'absolute';
+            heart.style.cursor = 'grabbing';
+
+            function moveHeart(e) {
+                heart.style.left = e.pageX - heart.offsetWidth / 2 + 'px';
+                heart.style.top = e.pageY - heart.offsetHeight / 2 + 'px';
+            }
+
+            function stopDrag() {
+                document.removeEventListener('mousemove', moveHeart);
+                document.removeEventListener('mouseup', stopDrag);
+                heart.style.cursor = 'grab';
+            }
+
+            document.addEventListener('mousemove', moveHeart);
+            document.addEventListener('mouseup', stopDrag);
         }
     </script>
 </body>
