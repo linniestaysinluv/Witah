@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I love you</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            overflow: hidden;
+        }
+        h1 {
+            color: #ef5858;
+            font-size: 2em;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #fbbdde;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            background-color: #ef5858;
+            transform: scale(1.1);
+        }
+        #rainButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            background-color: #ffb3c6;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        .emoji {
+            font-size: 1.5em;
+            color: #ef5858;
+            opacity: 0;
+            animation: fadeIn 2s forwards, float 3s ease-in-out infinite;
+        }
+        .heart {
+            position: absolute;
+            color: #ff69b4;
+            font-size: 1.5em;
+            animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <h1>I love you. (♡˙︶˙♡)</h1>
+    <button onclick="addMessage()">More love! ʕ•́ᴥ•̀ʔっ♡</button>
+    <button id="coolButton" onclick="coolMessage()">Wanna know something..? (๑•̀ㅂ•́)و✧</button>
+    <button id="rainButton" onclick="startHeartRain()">❤️</button>
+    <div id="messages"></div>
+
+    <script>
+        function addMessage() {
+            const messageDiv = document.getElementById('messages');
+            const newMessage = document.createElement('h1');
+            newMessage.innerHTML = 'I love you. (灬º‿º灬)♡';
+            messageDiv.appendChild(newMessage);
+        }
+
+        let coolButtonClicked = false;
+        function coolMessage() {
+            const coolButton = document.getElementById('coolButton');
+            
+            if (!coolButtonClicked) {
+                coolButton.textContent = "Well okay, here we go... (* ^ ω ^)";
+                coolButtonClicked = true;
+            } else {
+                const messageDiv = document.getElementById('messages');
+                const topMessage = document.createElement('h1');
+                topMessage.innerHTML = 'I miss you. (｡•́︿•̀｡)';
+                document.body.insertBefore(topMessage, messageDiv);
+                coolButton.style.display = "none";  // Hides the button after the final click
+
+                // Adds a floating emoji
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji';
+                emoji.innerHTML = '✧(｡•̀ᴗ-)✧';
+                document.body.appendChild(emoji);
+            }
+        }
+
+        function startHeartRain() {
+            for (let i = 0; i < 30; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 2 + 3 + 's'; // Random fall duration
+                document.body.appendChild(heart);
+
+                // Remove the heart element after animation ends to avoid too many elements on the page
+                heart.addEventListener('animationend', () => {
+                    heart.remove();
+                });
+            }
+        }
+    </script>
+</body>
+</html>
